@@ -1,9 +1,8 @@
-# data processing tools
+# Data processing tools
 import string, os 
 import pandas as pd
 import numpy as np
 np.random.seed(42)
-
 import random 
 
 # keras module for building LSTM 
@@ -20,222 +19,134 @@ import warnings
 warnings.filterwarnings("ignore")
 warnings.simplefilter(action='ignore', category=FutureWarning) # Ignore warnings from libraries. 
 
-#import sys
-#sys.path.append("..")
-#import utils.requirement_functions as rf
+# Importing functions for folder utils
+import sys
+sys.path.append(".")
+import utils.requirement_functions as rf
 
 
 
-
-
-
-def clean_text(txt): # return vocab if it is not part of string.punctuation 
-    # string.punctuation is a python model. ( a list of all string characters that er punctuations /%&¤#";:_-.,*")
-    txt = "".join(v for v in txt if v not in string.punctuation).lower() # Making lower case 
-    txt = txt.encode("utf8").decode("ascii",'ignore') # encoding utf8
-    return txt 
-
-def get_sequence_of_tokens(tokenizer, corpus):
-    ## convert data to sequence of tokens 
-    input_sequences = []
-    for line in corpus: # every head 
-        token_list = tokenizer.texts_to_sequences([line])[0] # list of tokens 
-        for i in range(1, len(token_list)): # order dem sequentialy
-            n_gram_sequence = token_list[:i+1]
-            input_sequences.append(n_gram_sequence)
-    return input_sequences
-
-def generate_padded_sequences(input_sequences):
-    # get the length of the longest sequence
-    max_sequence_len = max([len(x) for x in input_sequences])
-    # make every sequence the length of the longest on
-    input_sequences = np.array(pad_sequences(input_sequences, 
-                                            maxlen=max_sequence_len, 
-                                            padding='pre'))
-
-    predictors, label = input_sequences[:,:-1],input_sequences[:,-1]
-    label = ku.to_categorical(label, 
-                            num_classes=total_words)
-    return predictors, label, max_sequence_len
-
-def create_model(max_sequence_len, total_words): # model initilisation 
-    input_len = max_sequence_len - 1
-    model = Sequential() # sequential model
-    # Add Input Embedding Layer
-    model.add(Embedding(total_words, #
-                        10, 
-                        input_length=input_len))
-    # Add Hidden Layer 1 - LSTM Layer
-    model.add(LSTM(100)) # long short term memory
-    model.add(Dropout(0.1)) # drop out layer, during training everytime you make an iteration 10% of the weights should be removed. 
-    # so every iteration is only 90 %. Making things a bit more diffiuclt for the model 
-    # Add Output Layer
-    model.add(Dense(total_words, 
-                    activation='softmax')) # Softmax prediction.
-    model.compile(loss='categorical_crossentropy', 
-                    optimizer='adam')
-    
-    return model
-
-def generate_text(seed_text, next_words, model, max_sequence_len): # seed_text = prompt.
-    for _ in range(next_words): # for how ever many in next_word.
-        token_list = tokenizer.texts_to_sequences([seed_text])[0] # get vocab 
-        token_list = pad_sequences([token_list],  # pad it (zeros)
-                                    maxlen=max_sequence_len-1, 
-                                    padding='pre')
-        predicted = np.argmax(model.predict(token_list), # predict the next words with higest score.
-                                            axis=1)
-        
-        output_word = ""
-        for word,index in tokenizer.word_index.items(): # appending words together. 
-            if index == predicted:
-                output_word = word
-                break
-        seed_text += " "+output_word
-    return seed_text.title()
-
-
-
-
-
-  # Loading data 
+# Loading data 
 def filepath():
     print("Loading data")
-    data_dir = os.path.join(".","data", "news_data")
+    data_dir = os.path.join(".","data", "news_data") # Loading data from folder data.
     return data_dir  
 
 
 
-
-
-
-
-    # Appending columns
+# Appending columns
 def creating_list(file_path): 
-    all_comments = []
-    for filename in os.listdir(file_path):
-        if 'Comments' in filename:
-            comment_df = pd.read_csv(file_path + "/" + filename) # joining data_dir / filename. ( Creating dataframe)
-            all_comments.extend(list(comment_df["commentBody"].values)) # Creating a list of only comments. 
-    print("Amount of comments: " + str(len(all_comments)))
+    all_comments = [] # Creating empty list
+    for filename in os.listdir(file_path): # Creating a list of file path to the comments.
+        if 'Comments' in filename: # Only take files that have comments in their name.
+            comment_df = pd.read_csv(file_path + "/" + filename) # Creating a dataframe for each file.
+            all_comments.extend(list(comment_df["commentBody"].values)) # Taking column "commentsBody" and appending into the 
+            #empyt list. Thereby creating a list of only comments. 
+    print("Amount of comments: " + str(len(all_comments))) # Printing the length of the list
     return all_comments
 
 
 
-
-
-
-
-
+# Sampling
 def data_sampling(comments_list):
-    thousand_comments = random.sample(comments_list, 1000)
-    print("Sample size: " + str(len(thousand_comments)))
+    print("Creating Sampel")
+    thousand_comments = random.sample(comments_list, 1000) # Taking 1000 random comments from the list.
+    print("Sample size: " + str(len(thousand_comments))) # Printing sample length
     return thousand_comments
 
 
 
-
-
+# Cleaning
 def cleaning_comments(sample_list):
     print("Cleaning text")
-    corpus = [clean_text(x) for x in sample_list]
-    
+    corpus = [rf.clean_text(x) for x in sample_list] # Using Ross' function to remove all punctations from the sampled list.
     return corpus
 
+
    
-
-
-
+# Tokenizing
 def tokenization(clean_data):
     print("Tokenizing")
-    tokenizer = Tokenizer()
-    ## tokenization
-    tokenizer.fit_on_texts(clean_data) # tokenizing the text, and gives every word an index. Creating a vocab.
-    total_words = len(tokenizer.word_index) + 1 # how many total words are there. The reason for + 1 is to account for  = out of vocabulary token. if the tensorflow does not know the word. <unk> unknown word.
+    tokenizer = Tokenizer() # Placing tensor flow function for tokenizing wordsin a variable
     
+    tokenizer.fit_on_texts(clean_data) # tokenizing the text, and gives every word an index. Creating a vocab.
+    total_words = len(tokenizer.word_index) + 1 # how many total words are there. 
+    #The reason for + 1 is to account for  = out of vocabulary token. if the tensorflow does not know the word. <unk> unknown word.
     return tokenizer, total_words  
 
 
 
-
-
-
+# Sequence
 def input_sequence_function(tokenizer, clean_data):
     print("Input sequence")
-    inp_sequences = get_sequence_of_tokens(tokenizer, clean_data)
-    # Each document has multiple rows. 1-2, 1-2-3, 1-2-3-4 words (n-grams)
-    # Teaching the model to account to longer distances. 
+    # Each comment has multiple rows. 1-2, 1-2-3, 1-2-3-4 words (n-grams)
+    inp_sequences = rf.get_sequence_of_tokens(tokenizer, clean_data) # Creating n-grams for each comment (that is tokenized)
+    # with Ross' function "Get sequence_of_tokens"
+    # Teaching the model to account for longer distances. 
     return inp_sequences
 
 
 
-
-
-
-
-def padded_sequences(input_sequence):
+# Padding
+def padded_sequences(input_sequence, total_words):
     print("Padding sequences")
-    predictors, label, max_sequence_len = generate_padded_sequences(input_sequence) 
-    # All inputs need to be same lenght. 
-    # adding zeros to the start of shorted sequences 
+    predictors, label, max_sequence_len = rf.generate_padded_sequences(input_sequence, total_words) # Using Ross' function
+    # All inputs need to be same length. 
+    # Adding zeros to the start of short sequences 
     # predictors = input vectors 
     # labels = words 
-    print("Max sequence length: " + max_sequence_len)
+    print("Max sequence length: " + str(max_sequence_len)) # Printing the maximum sequence length
     return predictors, label, max_sequence_len
 
 
 
-
-
-
-
-
-def create_model(sequnece_length, total_words):
+# Creating Model
+def creating_model(sequnece_length, total_words):
     print("Creating model")
-    model = create_model(sequnece_length, total_words)
-    print(model.summary())
+    model = rf.create_model(sequnece_length, total_words) # Using Ross' function to create a model.
+    print(model.summary()) # Printing the model summary
     return model
 
 
 
-
-
-
-
-
-def training_model(model):
+# Training model
+def training_model(model, predictors, label):
     print("Training model")
-    history = model.fit(predictors, 
-                        label, 
-                        epochs=1, # prev. 100
-                        batch_size=128, # Updates weights after 128 
-                        verbose=1)
+    # Training the model, and saving training data in a variable.
+    history = model.fit(predictors, # Input vectors 
+                        label, # Words
+                        epochs=10, # How many runs should the model do
+                        batch_size=128, # Bach size. Update weights after 128 comments
+                        verbose=1) # Print status 
     return history
 
-# In notebooks, a models history is saved. So if the model has run one time with 100 epoch and you start it again it will run for 200 intotal.
-# You either need to create the model again ( Above chunck) or use tensor flow functiion clear history.
+
+
+# Saving model
+def saving_model(model):
+    folder_path = os.path.join("out") # Defining out path
+
+    tf.keras.models.save_model( # Using Tensor Flows function for saving models.
+    model, folder_path, overwrite=True, save_format=tf 
+    ) # Model name, folder, Overwrite existing saves, save format = tensorflow
 
 
 
-
-
-
-
-
-
-def main_function():
+def main_function(): # Running all functions with true paramenters.
     data_dir = filepath()
     all_comments = creating_list(data_dir)
     thousand_comments = data_sampling(all_comments)
     corpus = cleaning_comments(thousand_comments)
     tokenizer, total_words = tokenization(corpus)
     inp_sequences = input_sequence_function(tokenizer, corpus)
-    predictors, label, max_sequence_len = padded_sequences(inp_sequences)
-    model = create_model(max_sequence_len, total_words)
-    history = training_model(model)
+    predictors, label, max_sequence_len = padded_sequences(inp_sequences, total_words)
+    model = creating_model(max_sequence_len, total_words)
+    history = training_model(model, predictors, label)
+    saving_model(model)
+    print("done")
 
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # If called from terminal run main function
     main_function()
 

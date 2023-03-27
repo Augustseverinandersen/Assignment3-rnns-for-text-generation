@@ -32,7 +32,8 @@ def get_sequence_of_tokens(tokenizer, corpus):
             input_sequences.append(n_gram_sequence)
     return input_sequences
 
-def generate_padded_sequences(input_sequences):
+
+def generate_padded_sequences(input_sequences, total_words):
     # get the length of the longest sequence
     max_sequence_len = max([len(x) for x in input_sequences])
     # make every sequence the length of the longest on
