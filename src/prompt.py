@@ -1,5 +1,5 @@
 import string, os 
-
+import argparse
 # keras module for building LSTM 
 import tensorflow as tf
 tf.random.set_seed(42)
@@ -14,10 +14,23 @@ import warnings
 warnings.filterwarnings("ignore")
 warnings.simplefilter(action='ignore', category=FutureWarning) # Ignore warnings from libraries. 
 
+from joblib import dump, load
+
 import sys
 sys.path.append(".")
 import utils.requirement_functions as rf
 from train import padded_sequences, tokenization
+
+def input_parse():
+    # initialize the parser
+    parser = argparse.ArgumentParser()
+    # add arguments // "--name" is what you feed it in the command line
+    parser.add_argument("--filename", type=str)
+    # parse the arguments from command line
+    args = parser.parse_args()
+    return args
+
+
 
 
 def required_variables():
@@ -25,19 +38,25 @@ def required_variables():
     tokenizer = tokenization(clean_data)
     return max_sequence_len, tokenizer
 
-def saved_model():
-    new_model = tf.keras.models.load_model('out')
+def saved_model(args):
+    new_model = tf.keras.models.load_model(args.filename)
     new_model.summary()
     return new_model
 
 
-def generate_text_function(model, max_sequence_len):
-    print(rf.generate_text("Hello", 10, model, max_sequence_len)) # word you want, words to come after, model, make the sequence 24 in total.
+def generate_text_function(args, model):
+    # Get max sequence lenght from file name with split 
+    tokenizer = load("out/tokenizer.joblib")
+    filename = args.filename
+    max_sequence_len = filename.split("_")[1].split(".")[0] # 1 means save everything to the right. # o mean everything to the left 
+    print(rf.generate_text(tokenizer, "Hello", 10, model, max_sequence_len)) # word you want, words to come after, model, make the sequence 24 in total.
+    print(max_sequence_len)
 
 def main_function():
-    max_sequence_len, tokenizer = required_variables()
-    new_model = saved_model()
-    generate_text_function(new_model, max_sequence_len)
+    args = input_parse()
+    #max_sequence_len, tokenizer = required_variables()
+    new_model = saved_model(args)
+    generate_text_function(args, new_model)
 
 
 if __name__ == "__main__":

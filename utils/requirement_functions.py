@@ -65,11 +65,11 @@ def create_model(max_sequence_len, total_words): # model initilisation
     
     return model
 
-def generate_text(seed_text, next_words, model, max_sequence_len): # seed_text = prompt.
+def generate_text(tokenizer, seed_text, next_words, model, max_sequence_len): # seed_text = prompt.
     for _ in range(next_words): # for how ever many in next_word.
         token_list = tokenizer.texts_to_sequences([seed_text])[0] # get vocab 
         token_list = pad_sequences([token_list],  # pad it (zeros)
-                                    maxlen=max_sequence_len-1, 
+                                    maxlen=int(max_sequence_len)-1, 
                                     padding='pre')
         predicted = np.argmax(model.predict(token_list), # predict the next words with higest score.
                                             axis=1)

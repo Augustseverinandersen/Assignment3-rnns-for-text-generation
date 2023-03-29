@@ -50,7 +50,7 @@ def creating_list(file_path):
 # Sampling
 def data_sampling(comments_list):
     print("Creating Sampel")
-    thousand_comments = random.sample(comments_list, 1000) # Taking 1000 random comments from the list.
+    thousand_comments = random.sample(comments_list, 10) # Taking 1000 random comments from the list.
     print("Sample size: " + str(len(thousand_comments))) # Printing sample length
     return thousand_comments
 
@@ -115,7 +115,7 @@ def training_model(model, predictors, label):
     # Training the model, and saving training data in a variable.
     history = model.fit(predictors, # Input vectors 
                         label, # Words
-                        epochs=10, # How many runs should the model do
+                        epochs=1, # How many runs should the model do
                         batch_size=128, # Bach size. Update weights after 128 comments
                         verbose=1) # Print status 
     return history
@@ -123,14 +123,15 @@ def training_model(model, predictors, label):
 
 
 # Saving model
-def saving_model(model):
-    folder_path = os.path.join("out") # Defining out path
-
+def saving_model(model, max_sequence_len):
+    folder_path = os.path.join(f"out/rnn-model-seq_{max_sequence_len}.keras") # Defining out path
     tf.keras.models.save_model( # Using Tensor Flows function for saving models.
-    model, folder_path, overwrite=True, save_format=tf 
-    ) # Model name, folder, Overwrite existing saves, save format = tensorflow
+    model, folder_path, overwrite=True, save_format=None 
+    ) # Model name, folder, Overwrite existing saves, save format = none 
 
-
+def saving_tokenizer(tokenizer):
+    from joblib import dump, load
+    dump(tokenizer, "out/tokenizer.joblib")
 
 def main_function(): # Running all functions with true paramenters.
     data_dir = filepath()
@@ -142,7 +143,8 @@ def main_function(): # Running all functions with true paramenters.
     predictors, label, max_sequence_len = padded_sequences(inp_sequences, total_words)
     model = creating_model(max_sequence_len, total_words)
     history = training_model(model, predictors, label)
-    saving_model(model)
+    saving_model(model, max_sequence_len)
+    saving_tokenizer(tokenizer)
     print("done")
 
 
