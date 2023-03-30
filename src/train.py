@@ -26,6 +26,7 @@ import utils.requirement_functions as rf
 
 
 
+
 # Loading data 
 def filepath():
     print("Loading data")
@@ -130,8 +131,8 @@ def saving_model(model, max_sequence_len):
     ) # Model name, folder, Overwrite existing saves, save format = none 
 
 def saving_tokenizer(tokenizer):
-    from joblib import dump, load
-    dump(tokenizer, "out/tokenizer.joblib")
+    from joblib import dump, load # Importing joblibs, dumb and load functions.
+    dump(tokenizer, "out/tokenizer.joblib") # Saving tokenizer as a joblib, to be used in other script
 
 def main_function(): # Running all functions with true paramenters.
     data_dir = filepath()

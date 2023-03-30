@@ -26,6 +26,7 @@ def input_parse():
     parser = argparse.ArgumentParser()
     # add arguments // "--name" is what you feed it in the command line
     parser.add_argument("--filename", type=str)
+    parser.add_argument("--prompt", type=str)
     # parse the arguments from command line
     args = parser.parse_args()
     return args
@@ -49,7 +50,7 @@ def generate_text_function(args, model):
     tokenizer = load("out/tokenizer.joblib")
     filename = args.filename
     max_sequence_len = filename.split("_")[1].split(".")[0] # 1 means save everything to the right. # o mean everything to the left 
-    print(rf.generate_text(tokenizer, "Hello", 10, model, max_sequence_len)) # word you want, words to come after, model, make the sequence 24 in total.
+    print(rf.generate_text(tokenizer, args.prompt, 10, model, max_sequence_len)) # word you want, words to come after, model, make the sequence 24 in total.
     print(max_sequence_len)
 
 def main_function():
