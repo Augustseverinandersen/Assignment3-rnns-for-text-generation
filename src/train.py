@@ -21,8 +21,9 @@ warnings.simplefilter(action='ignore', category=FutureWarning) # Ignore warnings
 
 # Importing functions for folder utils
 import sys
-sys.path.append(".")
-import utils.requirement_functions as rf
+sys.path.append("utils")
+
+import requirement_functions as rf
 
 
 
@@ -30,7 +31,7 @@ import utils.requirement_functions as rf
 # Loading data 
 def filepath():
     print("Loading data")
-    data_dir = os.path.join(".","data", "news_data") # Loading data from folder data.
+    data_dir = os.path.join("data", "news_data") # Loading data from folder data.
     return data_dir  
 
 
@@ -135,17 +136,17 @@ def saving_tokenizer(tokenizer):
     dump(tokenizer, "out/tokenizer.joblib") # Saving tokenizer as a joblib, to be used in other script
 
 def main_function(): # Running all functions with true paramenters.
-    data_dir = filepath()
-    all_comments = creating_list(data_dir)
-    thousand_comments = data_sampling(all_comments)
-    corpus = cleaning_comments(thousand_comments)
-    tokenizer, total_words = tokenization(corpus)
-    inp_sequences = input_sequence_function(tokenizer, corpus)
-    predictors, label, max_sequence_len = padded_sequences(inp_sequences, total_words)
-    model = creating_model(max_sequence_len, total_words)
-    history = training_model(model, predictors, label)
-    saving_model(model, max_sequence_len)
-    saving_tokenizer(tokenizer)
+    data_dir = filepath() # finding file path
+    all_comments = creating_list(data_dir) # Creating dataframe and list of comments
+    thousand_comments = data_sampling(all_comments) # samplining comments in new list
+    corpus = cleaning_comments(thousand_comments) # removing punctuation from comments
+    tokenizer, total_words = tokenization(corpus) # tokenizing words 
+    inp_sequences = input_sequence_function(tokenizer, corpus) # generating sequence of each comment
+    predictors, label, max_sequence_len = padded_sequences(inp_sequences, total_words) # padding sequence to create equal length
+    model = creating_model(max_sequence_len, total_words) # creating model architecture 
+    history = training_model(model, predictors, label) # training model
+    saving_model(model, max_sequence_len) # saving model
+    saving_tokenizer(tokenizer) # saving tokenizer
     print("done")
 
 
@@ -153,3 +154,6 @@ def main_function(): # Running all functions with true paramenters.
 if __name__ == "__main__": # If called from terminal run main function
     main_function()
 
+
+# 268 - comments 10 - epoch 100
+# 284 - comments 1000 - epoch 5

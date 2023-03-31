@@ -17,8 +17,9 @@ warnings.simplefilter(action='ignore', category=FutureWarning) # Ignore warnings
 from joblib import dump, load
 
 import sys
-sys.path.append(".")
-import utils.requirement_functions as rf
+sys.path.append("utils")
+import requirement_functions as rf
+
 from train import padded_sequences, tokenization
 
 def input_parse():
