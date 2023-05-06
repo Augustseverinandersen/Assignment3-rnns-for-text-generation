@@ -4,7 +4,7 @@
 
 ## Contribution
 - This assignment was made in contribution with fellow students from class, and with inspiration from in-class notebooks. In-code comments are made by me. The code in the *requirement_functions.py* script is made by teacher Ross.
-- The data used in this assignment is *New York Times Comments* from articles published in Jan-May 2017 and Jan-April 2018. The data contains all the articles as csv files and the comments as csv files. There are over 2 million comments in total for over 9 thousand articles. According to the Kaggle author Aashita Kesarwani > "New York Times has a wide audience and plays a prominet role in shaping people's opinion and outlook on current affairs...". This makes the data interesting to work with, since it is created by a range of different people, about real world matters. For more information about the data click [here](https://www.kaggle.com/datasets/aashita/nyt-comments).
+- The data used in this assignment is *New York Times Comments* from articles published in Jan-May 2017 and Jan-April 2018. The data contains all the articles as csv files and the comments as csv files. There are over 2 million comments in total for over 9 thousand articles. According to the Kaggle author Aashita Kesarwani >"New York Times has a wide audience and plays a prominet role in shaping people's opinion and outlook on current affairs..." . This makes the data interesting to work with, since it is created by a range of different people, about real world matters. For more information about the data click [here](https://www.kaggle.com/datasets/aashita/nyt-comments).
 
 ## Packages
 - String
@@ -48,12 +48,12 @@ You should create a collection of scripts which do the following:
 To run this code follow these steps:
 1. Clone the repository 
 2. Get the zip file for the *New York Times Comments* from [here](https://www.kaggle.com/datasets/aashita/nyt-comments) and place it in the data folder
-3. Run '''bash setup.sh''' in the command-line. This will install the requirements, and create a virtual environment. 
-4. Run '''source ./assignment_3/bin/activate ''' in the command-line. This will activate the virtual environment.
-5. Run '''python3 src/train.py --zip_path data/archive.zip --sample_size 1000 --epochs 10''' in the command-line. This will run the code 
+3. Run ```bash setup.sh``` in the command-line. This will install the requirements, and create a virtual environment. 
+4. Run ```source ./assignment_3/bin/activate``` in the command-line. This will activate the virtual environment.
+5. Run ```python3 src/train.py --zip_path data/archive.zip --sample_size 1000 --epochs 10``` in the command-line. This will run the code 
   - __OBS!__ *--zip_path* is your path to the zip file. *--sample_size* is how many comments you want. The default is all comments. *--epochs* is the amount of epochs the model should be trained on. Default is 10
   - Your model and tokenizer will be stored in the folder *out*
-6. Run '''python3 src/prompt.py --filename out/rnn-model-seq_274.keras  --prompt Hello''' in the command-line. This will run the script that generates text.
+6. Run ```python3 src/prompt.py --filename out/rnn-model-seq_274.keras  --prompt Hello``` in the command-line. This will run the script that generates text.
   - __OBS!__ *--filename* is the path to the model you have created. *--prompt* is the prompt you want to generate text based of. The prompt should be one word
   - The existing model *rnn-model-seq_274.keras* is based on 1000 comments with 20 epochs and a final loss of 5.0161.
   - The text generation will appear in the command-line
