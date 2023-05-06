@@ -1,5 +1,5 @@
 import string, os 
-import argparse
+import argparse # Command line arguments
 # keras module for building LSTM 
 import tensorflow as tf
 tf.random.set_seed(42)
@@ -14,11 +14,11 @@ import warnings
 warnings.filterwarnings("ignore")
 warnings.simplefilter(action='ignore', category=FutureWarning) # Ignore warnings from libraries. 
 
-from joblib import dump, load
+from joblib import dump, load # Getting the saved models
 
 import sys
-sys.path.append("utils")
-import requirement_functions as rf
+sys.path.append("utils") # Find in utils folder
+import requirement_functions as rf # Ross's functions
 
 from train import padded_sequences, tokenization
 
@@ -33,33 +33,27 @@ def input_parse():
     return args
 
 
-
-
-def required_variables():
-    max_sequence_len = padded_sequences(input_sequence, total_words)
-    tokenizer = tokenization(clean_data)
-    return max_sequence_len, tokenizer
-
 def saved_model(args):
-    new_model = tf.keras.models.load_model(args.filename)
-    new_model.summary()
+    new_model = tf.keras.models.load_model(args.filename) # Loading in the saved model
+    new_model.summary() # Getting the model summary
     return new_model
 
 
 def generate_text_function(args, model):
     # Get max sequence lenght from file name with split 
-    tokenizer = load("out/tokenizer.joblib")
-    filename = args.filename
+    tokenizer = load("out/tokenizer.joblib") # Loading the saved tokenizer
+    filename = args.filename # getting the filename of the model.
     max_sequence_len = filename.split("_")[1].split(".")[0] # 1 means save everything to the right. # o mean everything to the left 
-    print(rf.generate_text(tokenizer, args.prompt, 10, model, max_sequence_len)) # word you want, words to come after, model, make the sequence 24 in total.
+    # The max sequence length is saved in the model name. I am extracting it here to be used below
+    print(rf.generate_text(tokenizer, args.prompt, 10, model, max_sequence_len)) # preprocessing, word you define, words to come after, model, max sequence length.
     print(max_sequence_len)
 
+
 def main_function():
-    args = input_parse()
-    #max_sequence_len, tokenizer = required_variables()
-    new_model = saved_model(args)
-    generate_text_function(args, new_model)
+    args = input_parse() # Command line arguments
+    new_model = saved_model(args) # Load the model
+    generate_text_function(args, new_model) # Generate text from your prompt
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # If script is called from command line run the main function
     main_function()

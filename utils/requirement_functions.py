@@ -14,7 +14,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout
 
 
-
+# Used to clean the corpus in train.py
 def clean_text(txt): # return vocab if it is not part of string.punctuation 
     # string.punctuation is a python model. ( a list of all string characters that er punctuations /%&¤#";:_-.,*")
     txt = "".join(v for v in txt if v not in string.punctuation).lower() # Making lower case 
@@ -22,30 +22,33 @@ def clean_text(txt): # return vocab if it is not part of string.punctuation
     return txt 
 
 
+# Used in the input_sequence_function function in train.py
 def get_sequence_of_tokens(tokenizer, corpus):
-    ## convert data to sequence of tokens 
-    input_sequences = []
-    for line in corpus: # every head 
-        token_list = tokenizer.texts_to_sequences([line])[0] # list of tokens 
+    # convert data to sequence of tokens 
+    input_sequences = [] # Creating empty list
+    for line in corpus: # every line in the corpus 
+        token_list = tokenizer.texts_to_sequences([line])[0] # create list of tokens 
         for i in range(1, len(token_list)): # order dem sequentialy
-            n_gram_sequence = token_list[:i+1]
-            input_sequences.append(n_gram_sequence)
+            n_gram_sequence = token_list[:i+1] # Creates an n_gram for each token_list
+            input_sequences.append(n_gram_sequence) # Appending to input list
     return input_sequences
 
 
+# Used in padded_sequence function in train.py
 def generate_padded_sequences(input_sequences, total_words):
-    # get the length of the longest sequence
+    # Get the length of the longest sequence
     max_sequence_len = max([len(x) for x in input_sequences])
-    # make every sequence the length of the longest on
+    # Make every sequence the length of the longest on
     input_sequences = np.array(pad_sequences(input_sequences, 
                                             maxlen=max_sequence_len, 
                                             padding='pre'))
 
-    predictors, label = input_sequences[:,:-1],input_sequences[:,-1]
+    predictors, label = input_sequences[:,:-1],input_sequences[:,-1] # Getting last element to be used as label
     label = ku.to_categorical(label, 
                             num_classes=total_words)
     return predictors, label, max_sequence_len
 
+# Used in the train.py script
 def create_model(max_sequence_len, total_words): # model initilisation 
     input_len = max_sequence_len - 1
     model = Sequential() # sequential model
@@ -65,6 +68,7 @@ def create_model(max_sequence_len, total_words): # model initilisation
     
     return model
 
+# Used in the prompt.py script
 def generate_text(tokenizer, seed_text, next_words, model, max_sequence_len): # seed_text = prompt.
     for _ in range(next_words): # for how ever many in next_word.
         token_list = tokenizer.texts_to_sequences([seed_text])[0] # get vocab 
