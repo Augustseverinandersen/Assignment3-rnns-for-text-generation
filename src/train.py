@@ -36,6 +36,7 @@ def input_parse():
     parser = argparse.ArgumentParser()
     parser.add_argument("--zip_path", type=str, help = "Path to the zip file")
     parser.add_argument("--sample_size", type = int, default = 2176364, help = "Specify amount of comments you want to use")
+    parser.add_argument("--epochs", type = int, default = 10, help = "How many epochs")
     args = parser.parse_args()
 
     return args
@@ -124,12 +125,12 @@ def creating_model(sequnece_length, total_words):
 
 
 # Training model
-def training_model(model, predictors, label):
+def training_model(model, predictors, label, args):
     print("Training model")
     # Training the model, and saving training data in a variable.
     history = model.fit(predictors, # Input vectors 
                         label, # Words
-                        epochs=20, # How many runs should the model do
+                        epochs= args.epochs, # How many runs should the model do
                         batch_size=128, # Batch size. Update weights after 128 comments
                         verbose=1) # Print status 
     return history
@@ -157,7 +158,7 @@ def main_function(): # Running all functions with true paramenters.
     inp_sequences = input_sequence_function(tokenizer, corpus) # generating sequence of each comment
     predictors, label, max_sequence_len = padded_sequences(inp_sequences, total_words) # padding sequence to create equal length
     model = creating_model(max_sequence_len, total_words) # creating model architecture 
-    history = training_model(model, predictors, label) # training model
+    history = training_model(model, predictors, label, args) # training model
     saving_model(model, max_sequence_len) # saving model
     saving_tokenizer(tokenizer) # saving tokenizer
     print("done")

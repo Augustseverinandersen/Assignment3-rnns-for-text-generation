@@ -26,8 +26,8 @@ def input_parse():
     # initialize the parser
     parser = argparse.ArgumentParser()
     # add arguments // "--name" is what you feed it in the command line
-    parser.add_argument("--filename", type=str)
-    parser.add_argument("--prompt", type=str)
+    parser.add_argument("--filename", type=str, help= "Your path to the saved model")
+    parser.add_argument("--prompt", type=str, help = "One word")
     # parse the arguments from command line
     args = parser.parse_args()
     return args
@@ -46,7 +46,6 @@ def generate_text_function(args, model):
     max_sequence_len = filename.split("_")[1].split(".")[0] # 1 means save everything to the right. # o mean everything to the left 
     # The max sequence length is saved in the model name. I am extracting it here to be used below
     print(rf.generate_text(tokenizer, args.prompt, 10, model, max_sequence_len)) # preprocessing, word you define, words to come after, model, max sequence length.
-    print(max_sequence_len)
 
 
 def main_function():
