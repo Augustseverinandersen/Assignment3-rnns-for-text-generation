@@ -4,7 +4,7 @@
 
 ## Contribution
 - This assignment was made in contribution with fellow students from class, and with inspiration from in-class notebooks. In-code comments are made by me. The code in the *requirement_functions.py* script is made by teacher Ross.
-- The data used in this assignment is *New York Times Comments* from articles published in Jan-May 2017 and Jan-April 2018. The data contains all the articles as csv files and the comments as csv files. There are over 2 million comments in total for over 9 thousand articles. According to the Kaggle author Aashita Kesarwani >"New York Times has a wide audience and plays a prominet role in shaping people's opinion and outlook on current affairs..." . This makes the data interesting to work with, since it is created by a range of different people, about real world matters. For more information about the data click [here](https://www.kaggle.com/datasets/aashita/nyt-comments).
+- The data used in this assignment is *New York Times Comments* from articles published in Jan-May 2017 and Jan-April 2018. The data contains all the articles as csv files and the comments as csv files. There are over 2 million comments in total for over 9 thousand articles. According to the Kaggle author Aashita Kesarwani > ""New York Times has a wide audience and plays a prominet role in shaping people's opinion and outlook on current affairs..."" . This makes the data interesting to work with, since it is created by a range of different people, about real world matters. For more information about the data click [here](https://www.kaggle.com/datasets/aashita/nyt-comments).
 
 ## Packages
 - String
