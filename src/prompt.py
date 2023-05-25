@@ -34,14 +34,14 @@ def input_parse():
 
 
 def saved_model(args):
+    tokenizer = load("out/tokenizer.joblib") # Loading the saved tokenizer
     new_model = tf.keras.models.load_model(args.filename) # Loading in the saved model
     new_model.summary() # Getting the model summary
-    return new_model
+    return tokenizer, new_model
 
 
-def generate_text_function(args, model):
+def generate_text_function(args, model, tokenizer):
     # Get max sequence lenght from file name with split 
-    tokenizer = load("out/tokenizer.joblib") # Loading the saved tokenizer
     filename = args.filename # getting the filename of the model.
     max_sequence_len = filename.split("_")[1].split(".")[0] # 1 means save everything to the right. # o mean everything to the left 
     # The max sequence length is saved in the model name. I am extracting it here to be used below
@@ -50,8 +50,8 @@ def generate_text_function(args, model):
 
 def main_function():
     args = input_parse() # Command line arguments
-    new_model = saved_model(args) # Load the model
-    generate_text_function(args, new_model) # Generate text from your prompt
+    tokenizer, new_model = saved_model(args) # Load the model
+    generate_text_function(args, new_model, tokenizer) # Generate text from your prompt
 
 
 if __name__ == "__main__": # If script is called from command line run the main function
