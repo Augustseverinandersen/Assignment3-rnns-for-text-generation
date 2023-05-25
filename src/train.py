@@ -71,7 +71,7 @@ def creating_list(file_path):
 # Sampling
 def data_sampling(comments_list, args):
     print("Creating Sampel")
-    thousand_comments = random.sample(comments_list, args.sample_size) # Taking 1000 random comments from the list.
+    thousand_comments = random.sample(comments_list, args.sample_size) # Taking 10000 random comments from the list.
     print("Sample size: " + str(len(thousand_comments))) # Printing sample length
     return thousand_comments
 
@@ -79,7 +79,7 @@ def data_sampling(comments_list, args):
 # Cleaning
 def cleaning_comments(sample_list):
     print("Cleaning text")
-    corpus = [rf.clean_text(x) for x in sample_list] # Using Ross' function to remove all punctuation from the sampelled list.
+    corpus = [rf.clean_text(x) for x in sample_list] # Using function from utils folder to remove all punctuation from the sampelled list.
     return corpus
 
 
