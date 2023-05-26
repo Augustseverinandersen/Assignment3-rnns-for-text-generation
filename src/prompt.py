@@ -4,10 +4,7 @@ import argparse # Command line arguments
 import tensorflow as tf
 tf.random.set_seed(42)
 import tensorflow.keras.utils as ku 
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout
+
 
 # surpress warnings
 import warnings
@@ -18,9 +15,9 @@ from joblib import dump, load # Getting the saved models
 
 import sys
 sys.path.append("utils") # Find in utils folder
-import requirement_functions as rf # Ross's functions
+import requirement_functions as rf # Importing functions from utils folder
 
-from train import padded_sequences, tokenization
+from train import padded_sequences, tokenization # Importing from script train.py
 
 def input_parse():
     # initialize the parser

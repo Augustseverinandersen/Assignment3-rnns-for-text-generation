@@ -7,14 +7,13 @@ import argparse # Command line arguments
 import zipfile # Zip file manipulation
 import random # Random sampling
 
-# keras module for building LSTM 
+# keras module for building LSTM model
 import tensorflow as tf
 tf.random.set_seed(42)
 import tensorflow.keras.utils as ku 
-from tensorflow.keras.models import Sequential
+
 from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout
+
 
 # surpress warnings
 import warnings
@@ -71,7 +70,7 @@ def creating_list(file_path):
 # Sampling
 def data_sampling(comments_list, args):
     print("Creating Sampel")
-    thousand_comments = random.sample(comments_list, args.sample_size) # Taking 10000 random comments from the list.
+    thousand_comments = random.sample(comments_list, args.sample_size) # Taking a user specified amount of random comments from the list.
     print("Sample size: " + str(len(thousand_comments))) # Printing sample length
     return thousand_comments
 
@@ -131,13 +130,14 @@ def training_model(model, predictors, label, args):
     history = model.fit(predictors, # Input vectors 
                         label, # Words
                         epochs= args.epochs, # How many runs should the model do
-                        batch_size=128, # Batch size. Update weights after 128 comments
+                        batch_size=32, # Batch size. Update weights after 32 comments
                         verbose=1) # Print status 
     return history
 
 
 # Saving model
 def saving_model(model, max_sequence_len):
+    print("Saving Model")
     folder_path = os.path.join(f"out/rnn-model-seq_{max_sequence_len}.keras") # Defining out path 
     # The reason for f string, is because the max_sequence_len is being used in the prompt.py script
     tf.keras.models.save_model( # Using Tensor Flows function for saving models.
@@ -145,6 +145,7 @@ def saving_model(model, max_sequence_len):
     ) # Model name, folder, Overwrite existing saves, save format = none 
 
 def saving_tokenizer(tokenizer):
+    print("Saving Tokenizer")
     from joblib import dump, load # Importing joblibs, dumb and load functions.
     dump(tokenizer, "out/tokenizer.joblib") # Saving tokenizer as a joblib, to be used in other script
 
