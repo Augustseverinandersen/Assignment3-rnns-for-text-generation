@@ -11,10 +11,11 @@ import warnings
 warnings.filterwarnings("ignore")
 warnings.simplefilter(action='ignore', category=FutureWarning) # Ignore warnings from libraries. 
 
-from joblib import dump, load # Getting the saved models
+from joblib import dump, load # Importing joblis to Get the saved models
 
 import sys
 sys.path.append("utils") # Find in utils folder
+
 import requirement_functions as rf # Importing functions from utils folder
 
 from train import padded_sequences, tokenization # Importing from script train.py

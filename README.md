@@ -6,7 +6,7 @@ For this assignment, you're going to create some scripts which will allow you to
 - Train a model on the Comments section of the data and save the model. 
 - Load the saved model and generate text from a user-suggested prompt.
 ## 3.2 Machine Specification and My Usage
-All the computation done for this project was performed on the UCloud interactive HPC system, which is managed by the eScience Center at the University of Southern Denmark. The scripts were created with Coder Python 1.73.1 and Python version 3.9.2.
+All the computation done for this project was performed on the UCloud interactive HPC system, which is managed by the eScience Center at the University of Southern Denmark. The scripts were created with Coder Python 1.73.1 and Python version 3.9.2. I ran the scripts on 16 CPUs, and a total run time of 155 minutes.
 ### 3.2.1 Perquisites
 To run the scripts, make sure to have Bash and Python3 installed on your device. The script has only been tested on Ucloud.
 ## 3.3 Contribution
@@ -53,7 +53,7 @@ The repository contains the following folders and files:
 ## 3.7 Discussion 
 The RNN created in this script is used to generate text. This is done by having the model remember word dependencies in the text using _LSTM_. Thereby, the model should be able to predict the next word based on the previous words, by seeing which word fits the context the best. 
 
-In theory, the output from the ``prompt.py`` script should be a 10-word sentence that makes sense. However, that was not the case since my model only was trained on 1,000 comments and 20 epochs, with a final loss of 5.01. This means that my model kept predicting the same words and got stuck in a loop. 
+In theory, the output from the ``prompt.py`` script should be a 10-word sentence that makes sense. However, that was not the case since my model only was trained on 1,000 comments and 20 epochs, with a final loss of 3.94. This means that my model kept predicting the same words and got stuck in a loop. 
 
 The corpus used in this assignment is an interesting and relevant dataset. The New York Times comments are created by people about real-world issues. Thereby, the model would have been trained on a corpus created by many different people, with different sentiments, and with different styles of writing. 
 ## 3.8 Usage
@@ -68,8 +68,8 @@ The corpus used in this assignment is an interesting and relevant dataset. The N
     - The argparse ``--sample_size`` takes an integer as input and has a default of 2,176,364 (all comments). Only include if you want to take a sample size of the data.
     - The argparse ``--epochs`` takes an integer as input and has a default of 10. Only change if you want to increase or decrease the number of epochs. 
 -	Your model and tokenizer will be stored in the folder _out_
--	Run ``python3 src/prompt.py --filename out/rnn-model-seq_274.keras --prompt Hello`` in the command-line. This will run the script ``prompt.py``.
+-	Run ``python3 src/prompt.py --filename out/rnn-model-seq_275.keras --prompt Hello`` in the command-line. This will run the script ``prompt.py``.
     - The argparse ``--filename`` takes a string as input and is the path to the model you created. 
     - The argparse ``--prompt`` is the prompt you want to generate text based on. The prompt should be one word
-    - The existing model _rnn-model-seq_274.keras_ is based on 1000 comments with 20 epochs and a final loss of 5.0161.
+    - The existing model _rnn-model-seq_275.keras_ is based on 1000 comments with 20 epochs and a final loss of 3.94.
     - The text generation will be printed to the command-line.
